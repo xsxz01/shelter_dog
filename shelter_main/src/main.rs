@@ -26,13 +26,16 @@ fn main() -> anyhow::Result<()> {
         .get_one::<String>("config")
         .map(|s| s.as_str())
         .unwrap_or("");
+
+    // 获取配置文件
+    let settings = settings::Settings::new(config_location, "SHELTER")?;
+
+    // 开启日志
     let subscriber = Registry::default()
         .with(LevelFilter::from_level(Level::DEBUG))
         .with(tracing_subscriber::fmt::Layer::default().with_writer(std::io::stdout));
 
     tracing::subscriber::set_global_default(subscriber).expect("Failed to set subscriber");
-
-    let settings = settings::Settings::new(config_location, "SHELTER")?;
     commands::handle(&matches, &settings)?;
     Ok(())
 }
