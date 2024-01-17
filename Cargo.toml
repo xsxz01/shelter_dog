@@ -1,5 +1,6 @@
 [workspace]
 
 members = [
-  "shelter_main"
+  "shelter_main",
+  "migration"
 ]
