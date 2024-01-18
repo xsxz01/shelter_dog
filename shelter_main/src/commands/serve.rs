@@ -1,5 +1,6 @@
 use std::sync::Arc;
 use clap::{Arg, ArgMatches, Command, value_parser};
+use sea_orm::Database;
 use tower_http::trace::TraceLayer;
 
 use crate::settings::Settings;
@@ -34,7 +35,11 @@ fn start_tokio(port: u16, settings: &Settings) -> anyhow::Result<()> {
         .build()
         .unwrap()
         .block_on(async move {
-            let state = Arc::new(ApplicationState::new(settings)?);
+            let db_url = settings.database.url.clone().unwrap();
+            let db_conn = Database::connect(db_url)
+                .await
+                .expect("数据库连接失败");
+            let state = Arc::new(ApplicationState::new(settings, db_conn)?,);
             let routes = crate::api::configure(state).layer(TraceLayer::new_for_http());
             tracing::info!("starting axum on port {}", port);
             let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port)).await.unwrap();
