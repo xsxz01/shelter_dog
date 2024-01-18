@@ -22,6 +22,21 @@ pub struct Model {
     pub hair: String,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, DeriveIntoActiveModel)]
+pub struct DogCreateRequest {
+    pub name: String,
+    pub description: String,
+    pub date_of_birth: NaiveDate,
+    pub date_of_vaccination: Option<NaiveDate>,
+    pub chip_number: String,
+    pub gender: String,
+    pub is_sterilized: bool,
+    pub breed: String,
+    pub size: String,
+    pub weight: Option<i32>,
+    pub hair: String,
+}
+
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {}
 
