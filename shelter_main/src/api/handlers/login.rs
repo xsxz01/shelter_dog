@@ -54,7 +54,7 @@ pub async fn login(
     ).unwrap();
 
     let response = LoginResponse {
-        status: "succcess".to_string(),
+        status: "success".to_string(),
         token
     };
 
